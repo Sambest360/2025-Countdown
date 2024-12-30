@@ -97,7 +97,7 @@
     <canvas id="canvas"></canvas>
     <div class="card">
         <div id="messageContainer">
-            <div id="messageText" class="message-text">Happy Holidays!</div>
+            <div id="messageText" class="message-text">Merry Christmas!</div>
             <div id="fromText" class="from-text"></div>
         </div>
         <a href="sign-name.html" class="btn">Send Your Own Message</a>
@@ -107,11 +107,15 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const message = urlParams.get('message');
-        const name = urlParams.get('name');
 
-        if (message && name) {
-            document.getElementById('messageText').textContent = message;
-            document.getElementById('fromText').textContent = `From: ${name}`;
+        if (message) {
+            const messageParts = message.split('\n\nfrom ');
+            if (messageParts.length === 2) {
+                document.getElementById('messageText').textContent = messageParts[0];
+                document.getElementById('fromText').textContent = `From: ${messageParts[1]}`;
+            } else {
+                document.getElementById('messageText').textContent = message;
+            }
         }
 
         // Track countdown link clicks
