@@ -190,6 +190,12 @@
             });
         });
 
+        // Track countdown link clicks
+        document.getElementById('countdownLink').addEventListener('click', () => {
+            const count = parseInt(localStorage.getItem('countdownClicks'), 10) || 0;
+            localStorage.setItem('countdownClicks', count + 1);
+        });
+
         // Fireworks code
         window.addEventListener("resize", resizeCanvas, false);
         window.addEventListener("DOMContentLoaded", onLoad, false);

@@ -101,7 +101,7 @@
             <div id="fromText" class="from-text"></div>
         </div>
         <a href="sign-name.html" class="btn">Send Your Own Message</a>
-        <a href="index.html" class="btn">Countdown to 2025</a>
+        <a href="index.html" class="btn" id="countdownBtn">Countdown to 2025</a>
     </div>
 
     <script>
@@ -113,6 +113,12 @@
             document.getElementById('messageText').textContent = message;
             document.getElementById('fromText').textContent = `From: ${name}`;
         }
+
+        // Track countdown link clicks
+        document.getElementById('countdownBtn').addEventListener('click', () => {
+            const count = parseInt(localStorage.getItem('countdownClicks'), 10) || 0;
+            localStorage.setItem('countdownClicks', count + 1);
+        });
 
         window.addEventListener("resize", resizeCanvas, false);
         window.addEventListener("DOMContentLoaded", onLoad, false);
