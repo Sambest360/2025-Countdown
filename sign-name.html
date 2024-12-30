@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Your Christmas Message</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background: black;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Remove overflow: hidden to allow scrolling */
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+            width: 90%;
+            margin: 2rem auto; /* Add vertical margin for better scrolling */
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: linear-gradient(to right, #c62828, #2e7d32);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .link-container {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            word-break: break-all;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Media Queries for Responsive Design */
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 1rem;
+                width: 95%;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+            }
+
+            input, textarea {
+                padding: 0.6rem;
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .link-container {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="container">
+        <h1>Create Your Christmas Message</h1>
+        <div class="form-group">
+            <input type="text" id="nameInput" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+            <textarea id="messageInput" placeholder="Enter your message" required></textarea>
+        </div>
+        <button id="generateLink" class="btn">Generate Message Link</button>
+        <div id="successMessage" class="success-message">
+            Your message link is ready!
+        </div>
+        <div id="linkContainer" class="link-container">
+            <p>Share this link:</p>
+            <p id="outputLink"></p>
+            <button id="copyLink" class="btn">Copy Link</button>
+        </div>
+        <button onclick="window.location.href='countdown.html'" id="countdownLink" class="btn">Go to Countdown</button>
+    </div>
+
+    <script>
+        // Initialize localStorage if needed
+        if (!localStorage.getItem('signedNames')) {
+            localStorage.setItem('signedNames', JSON.stringify([]));
+        }
+
+        document.getElementById('generateLink').addEventListener('click', () => {
+            const name = document.getElementById('nameInput').value.trim();
+            const message = document.getElementById('messageInput').value.trim();
+            if (!name || !message) {
+                alert('Please enter both your name and message');
+                return;
+            }
+
+            // Generate the message link with both message and name
+            const formattedMessage = `${message}\n
+            
+            from ${name}`;
+            
+            const link = `merry-christmas.html?message=${encodeURIComponent(formattedMessage)}`;
+            document.getElementById('outputLink').textContent = link;
+            document.getElementById('linkContainer').style.display = 'block';
+            document.getElementById('successMessage').style.display = 'block';
+
+            // Track the name in localStorage
+            const names = JSON.parse(localStorage.getItem('signedNames')) || [];
+            names.push(name);
+            localStorage.setItem('signedNames', JSON.stringify(names));
+        });
+
+        document.getElementById('copyLink').addEventListener('click', () => {
+            const link = document.getElementById('outputLink').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy link:', err);
+            });
+        });
+
+        // Fireworks code
+        window.addEventListener("resize", resizeCanvas, false);
+        window.addEventListener("DOMContentLoaded", onLoad, false);
+        
+        window.requestAnimationFrame = 
+            window.requestAnimationFrame       || 
+            window.webkitRequestAnimationFrame || 
+            window.mozRequestAnimationFrame    || 
+            window.oRequestAnimationFrame      || 
+            window.msRequestAnimationFrame     || 
+            function (callback) {
+                window.setTimeout(callback, 1000/60);
+            };
+        
+        var canvas, ctx, w, h, particles = [], probability = 0.04,
+            xPoint, yPoint;
+        
+        function onLoad() {
+            canvas = document.getElementById("canvas");
+            ctx = canvas.getContext("2d");
+            resizeCanvas();
+            
+            window.requestAnimationFrame(updateWorld);
+        } 
+        
+        function resizeCanvas() {
+            if (!!canvas) {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+        } 
+        
+        function updateWorld() {
+            update();
+            paint();
+            window.requestAnimationFrame(updateWorld);
+        } 
+        
+        function update() {
+            if (particles.length < 500 && Math.random() < probability) {
+                createFirework();
+            }
+            var alive = [];
+            for (var i=0; i<particles.length; i++) {
+                if (particles[i].move()) {
+                    alive.push(particles[i]);
+                }
+            }
+            particles = alive;
+        } 
+        
+        function paint() {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = "rgba(0,0,0,0.2)";
+            ctx.fillRect(0, 0, w, h);
+            ctx.globalCompositeOperation = 'lighter';
+            for (var i=0; i<particles.length; i++) {
+                particles[i].draw(ctx);
+            }
+        } 
+        
+        function createFirework() {
+            xPoint = Math.random()*(w-200)+100;
+            yPoint = Math.random()*(h-200)+100;
+            var nFire = Math.random()*50+100;
+            var c = "rgb("+(~~(Math.random()*200+55))+","
+                 +(~~(Math.random()*200+55))+","+(~~(Math.random()*200+55))+")";
+            for (var i=0; i<nFire; i++) {
+                var particle = new Particle();
+                particle.color = c;
+                var vy = Math.sqrt(25-particle.vx*particle.vx);
+                if (Math.abs(particle.vy) > vy) {
+                    particle.vy = particle.vy>0 ? vy: -vy;
+                }
+                particles.push(particle);
+            }
+        } 
+        
+        function Particle() {
+            this.w = this.h = Math.random()*4+1;
+            
+            this.x = xPoint-this.w/2;
+            this.y = yPoint-this.h/2;
+            
+            this.vx = (Math.random()-0.5)*10;
+            this.vy = (Math.random()-0.5)*10;
+            
+            this.alpha = Math.random()*.5+.5;
+            
+            this.color;
+        } 
+        
+        Particle.prototype = {
+            gravity: 0.05,
+            move: function () {
+                this.x += this.vx;
+                this.vy += this.gravity;
+                this.y += this.vy;
+                this.alpha -= 0.01;
+                if (this.x <= -this.w || this.x >= screen.width ||
+                    this.y >= screen.height ||
+                    this.alpha <= 0) {
+                        return false;
+                }
+                return true;
+            },
+            draw: function (c) {
+                c.save();
+                c.beginPath();
+                
+                c.translate(this.x+this.w/2, this.y+this.h/2);
+                c.arc(0, 0, this.w, 0, Math.PI*2);
+                c.fillStyle = this.color;
+                c.globalAlpha = this.alpha;
+                
+                c.closePath();
+                c.fill();
+                c.restore();
+            }
+        }
+    </script>
+</body>
+</html>
