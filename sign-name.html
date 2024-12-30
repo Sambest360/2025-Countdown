@@ -167,11 +167,10 @@
             }
 
             // Generate the message link with both message and name
-            const formattedMessage = `${message}\n
+            const baseUrl = 'https://sambest360.github.io/2025-Countdown/';
+            const formattedMessage = `${message}\n\nfrom ${name}`;
+            const link = `${baseUrl}merry-christmas.html?message=${encodeURIComponent(formattedMessage)}`;
             
-            from ${name}`;
-            
-            const link = `merry-christmas.html?message=${encodeURIComponent(formattedMessage)}`;
             document.getElementById('outputLink').textContent = link;
             document.getElementById('linkContainer').style.display = 'block';
             document.getElementById('successMessage').style.display = 'block';
