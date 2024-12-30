@@ -50,6 +50,18 @@
             word-wrap: break-word;
         }
 
+        .message-text {
+            white-space: pre-wrap;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 1rem;
+        }
+
+        .from-text {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            font-style: italic;
+            margin-bottom: 2rem;
+        }
+
         .btn {
             padding: clamp(0.5rem, 3vw, 1rem) clamp(1rem, 4vw, 2rem);
             font-size: clamp(1rem, 3vw, 1.2rem);
@@ -84,7 +96,10 @@
 <body>
     <canvas id="canvas"></canvas>
     <div class="card">
-        <h1><span id="message">Happy Holidays!</span></h1>
+        <div id="messageContainer">
+            <div id="messageText" class="message-text">Happy Holidays!</div>
+            <div id="fromText" class="from-text"></div>
+        </div>
         <a href="sign-name.html" class="btn">Send Your Own Message</a>
         <a href="index.html" class="btn">Countdown to 2025</a>
     </div>
@@ -92,7 +107,12 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const message = urlParams.get('message');
-        document.getElementById('message').textContent = message || "Happy Holidays!";
+        const name = urlParams.get('name');
+
+        if (message && name) {
+            document.getElementById('messageText').textContent = message;
+            document.getElementById('fromText').textContent = `From: ${name}`;
+        }
 
         window.addEventListener("resize", resizeCanvas, false);
         window.addEventListener("DOMContentLoaded", onLoad, false);
