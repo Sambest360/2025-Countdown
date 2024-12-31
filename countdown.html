@@ -21,15 +21,16 @@
         }
 
         .container {
-            padding: 2rem;
-            width: 90%;
-            max-width: 1000px;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            width: 95%;
+            max-width: 1400px;
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
+            border-radius: 25px;
             position: relative;
             z-index: 1;
             margin: 2rem 0;
+            border: 3px solid rgba(255, 255, 255, 0.2);
         }
 
         .popup {
@@ -39,13 +40,13 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 2rem;
-            border-radius: 15px;
+            padding: 3rem;
+            border-radius: 25px;
             z-index: 1000;
             text-align: center;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
             max-width: 90%;
-            width: 400px;
+            width: 600px;
             opacity: 1;
             transition: opacity 0.5s ease;
         }
@@ -55,34 +56,37 @@
         }
 
         .popup img {
-            width: 150px;
+            width: 250px;
             height: auto;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
         }
 
         .popup-message {
             color: #333;
-            font-size: 1.2rem;
-            margin: 1rem 0;
-            line-height: 1.4;
+            font-size: 2.5rem;
+            margin: 1.5rem 0;
+            line-height: 1.6;
         }
 
         h1 {
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
-            margin-bottom: 2rem;
+            font-size: clamp(2.5rem, 7vw, 4.5rem);
+            margin-bottom: 3rem;
             animation: glow 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
         }
 
         #timer {
             font-family: 'Courier New', monospace;
-            font-size: clamp(2rem, 7vw, 3.5rem);
+            font-size: clamp(3rem, 8vw, 5rem);
             font-weight: bold;
-            margin: 2rem 0;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            margin: 3rem 0;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8),
+                         0 0 30px rgba(255, 255, 255, 0.5),
+                         0 0 45px rgba(255, 255, 255, 0.3);
             word-wrap: break-word;
             display: flex;
             justify-content: center;
-            gap: 1rem;
+            gap: 2rem;
             flex-wrap: wrap;
         }
 
@@ -90,21 +94,29 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 120px;
+            min-width: 180px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
         }
 
         .time-value {
-            font-size: clamp(2rem, 7vw, 3.5rem);
+            font-size: clamp(3rem, 8vw, 5rem);
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
         }
 
         .time-label {
-            font-size: clamp(1rem, 3vw, 1.2rem);
-            opacity: 0.8;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            opacity: 0.9;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
         }
 
         .content-wrapper {
             display: flex;
-            gap: 2rem;
+            gap: 3rem;
             align-items: flex-start;
             justify-content: space-between;
             flex-wrap: wrap;
@@ -112,7 +124,7 @@
 
         .image-container {
             flex: 1;
-            min-width: 300px;
+            min-width: 400px;
             height: 100%;
             display: flex;
             align-items: center;
@@ -120,19 +132,21 @@
 
         .verses-container {
             flex: 1;
-            min-width: 300px;
+            min-width: 400px;
         }
 
         #verse, #verse2, #verse3 {
             display: none;
-            font-size: clamp(1rem, 3vw, 1.4rem);
-            line-height: 1.4;
-            margin: 1rem 0;
-            padding: 0.8rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            line-height: 1.6;
+            margin: 1.5rem 0;
+            padding: 1.2rem;
+            background: transparent;
+            border-radius: 20px;
             animation: fadeIn 2s ease-in;
             text-align: left;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+            color: white;
         }
 
         #celebration-image {
@@ -140,9 +154,9 @@
             width: 100%;
             height: auto;
             margin: 0;
-            border-radius: 15px;
+            border-radius: 20px;
             animation: fadeIn 2s ease-in;
-            max-height: 60%;
+            max-height: 70%;
             object-fit: contain;
         }
 
@@ -152,32 +166,32 @@
         }
 
         .btn {
-            padding: clamp(0.5rem, 2vw, 1rem) clamp(1rem, 4vw, 2rem);
-            font-size: clamp(1rem, 3vw, 1.2rem);
-            margin: 1rem;
+            padding: clamp(1rem, 3vw, 2rem) clamp(2rem, 5vw, 4rem);
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin: 2rem;
             border: none;
-            border-radius: 25px;
+            border-radius: 35px;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
             transition: transform 0.3s, box-shadow 0.3s;
             background: linear-gradient(to right, #c62828, #2e7d32);
             color: white;
-            width: min(100%, 300px);
+            width: min(100%, 400px);
             box-sizing: border-box;
         }
 
         .btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
 
         @keyframes glow {
             from {
-                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #c62828;
+                text-shadow: 0 0 8px #fff, 0 0 15px #fff, 0 0 25px #c62828;
             }
             to {
-                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #2e7d32;
+                text-shadow: 0 0 15px #fff, 0 0 30px #fff, 0 0 45px #2e7d32;
             }
         }
 
@@ -197,7 +211,7 @@
             #timer {
                 display: flex;
                 flex-direction: column;
-                gap: 0.5rem;
+                gap: 1rem;
             }
 
             .time-unit {
@@ -206,7 +220,7 @@
             }
 
             .container {
-                padding: 1rem;
+                padding: 1.5rem;
             }
 
             .content-wrapper {
@@ -219,7 +233,7 @@
             }
 
             #celebration-image {
-                max-height: 200px;
+                max-height: 300px;
             }
         }
     </style>
@@ -230,7 +244,8 @@
     <div class="popup" id="welcomePopup">
         <img src="img/logo.png" alt="Church Logo">
         <div class="popup-message">
-            Welcome to 2025, we are "UNLEASHED TO LIVE A LIFE WORTHY OF THE CALLING"
+            We are being unleashed to live a life worthy of our calling in 2025 and beyond.<br>
+            Go in peace and be blessed!!!!
             <br>
             - From COP Johannesburg District
         </div>
@@ -267,7 +282,7 @@
         const verse3 = document.getElementById('verse3');
         const celebrationImage = document.getElementById('celebration-image');
         const welcomePopup = document.getElementById('welcomePopup');
-        const targetDate = new Date('2025-01-01T00:00:00').getTime();
+        const targetDate = new Date('January 1, 2025 00:00:00').getTime();
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const heading = document.querySelector('h1');
