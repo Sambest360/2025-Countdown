@@ -17,18 +17,54 @@
             align-items: center;
             text-align: center;
             overflow-y: auto;
+            transition: background 1s ease;
         }
 
         .container {
             padding: 2rem;
             width: 90%;
-            max-width: 1000px; /* Increased max-width */
+            max-width: 1000px;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             position: relative;
             z-index: 1;
             margin: 2rem 0;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            max-width: 90%;
+            width: 400px;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .popup.fade-out {
+            opacity: 0;
+        }
+
+        .popup img {
+            width: 150px;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+
+        .popup-message {
+            color: #333;
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            line-height: 1.4;
         }
 
         h1 {
@@ -44,6 +80,26 @@
             margin: 2rem 0;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
             word-wrap: break-word;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 120px;
+        }
+
+        .time-value {
+            font-size: clamp(2rem, 7vw, 3.5rem);
+        }
+
+        .time-label {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            opacity: 0.8;
         }
 
         .content-wrapper {
@@ -86,7 +142,7 @@
             margin: 0;
             border-radius: 15px;
             animation: fadeIn 2s ease-in;
-            max-height: 60%; /* Changed from 80% to 60% */
+            max-height: 60%;
             object-fit: contain;
         }
 
@@ -134,6 +190,7 @@
             z-index: 0;
             pointer-events: none;
             display: none;
+            background: white;
         }
 
         @media (max-width: 480px) {
@@ -141,6 +198,11 @@
                 display: flex;
                 flex-direction: column;
                 gap: 0.5rem;
+            }
+
+            .time-unit {
+                min-width: auto;
+                width: 100%;
             }
 
             .container {
@@ -153,11 +215,11 @@
 
             .image-container, .verses-container {
                 width: 100%;
-                min-width: 100%; /* Added to ensure full width on mobile */
+                min-width: 100%;
             }
 
             #celebration-image {
-                max-height: 200px; /* Adjusted from 250px to 200px for mobile */
+                max-height: 200px;
             }
         }
     </style>
@@ -165,8 +227,16 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <div class="popup" id="welcomePopup">
+        <img src="img/logo.png" alt="Church Logo">
+        <div class="popup-message">
+            Welcome to 2025 
+            <br>
+            - From COP Johannesburg District
+        </div>
+    </div>
     <div class="container">
-        <h1>Welcome to 2025!</h1>
+        <h1>Countdown to 2025!</h1>
         <div id="timer">Loading...</div>
         <div class="content-wrapper">
             <div class="image-container">
@@ -196,13 +266,19 @@
         const verse2 = document.getElementById('verse2');
         const verse3 = document.getElementById('verse3');
         const celebrationImage = document.getElementById('celebration-image');
-        const targetDate = new Date('January 1, 2025 00:00:00').getTime();
+        const welcomePopup = document.getElementById('welcomePopup');
+        const targetDate = new Date('2025-01-01T00:00:00').getTime();
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        const heading = document.querySelector('h1');
 
         let particles = [];
+        let confetti = [];
         let probability = 0.04;
         let w, h, xPoint, yPoint;
+
+        const confettiColors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+        const confettiShapes = ['circle', 'square', 'triangle'];
 
         function resizeCanvas() {
             if (!!canvas) {
@@ -217,6 +293,7 @@
         function updateWorld() {
             update();
             paint();
+            updateConfetti();
             window.requestAnimationFrame(updateWorld);
         }
 
@@ -241,6 +318,66 @@
             for (var i=0; i<particles.length; i++) {
                 particles[i].draw(ctx);
             }
+        }
+
+        function createConfetti() {
+            if (confetti.length < 200) {
+                const piece = {
+                    x: Math.random() * w,
+                    y: h + 20,
+                    rotation: Math.random() * 360,
+                    shape: confettiShapes[Math.floor(Math.random() * confettiShapes.length)],
+                    size: Math.random() * 10 + 5,
+                    color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+                    speed: -(Math.random() * 3 + 2),
+                    rotationSpeed: (Math.random() - 0.5) * 2,
+                    horizontalSpeed: (Math.random() - 0.5) * 2,
+                    opacity: 1
+                };
+                confetti.push(piece);
+            }
+        }
+
+        function updateConfetti() {
+            createConfetti();
+            ctx.save();
+            
+            for (let i = confetti.length - 1; i >= 0; i--) {
+                const piece = confetti[i];
+                piece.y += piece.speed;
+                piece.x += piece.horizontalSpeed;
+                piece.rotation += piece.rotationSpeed;
+                piece.opacity -= 0.005;
+
+                ctx.save();
+                ctx.translate(piece.x, piece.y);
+                ctx.rotate(piece.rotation * Math.PI / 180);
+                ctx.globalAlpha = piece.opacity;
+                ctx.fillStyle = piece.color;
+
+                if (piece.shape === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, piece.size / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (piece.shape === 'square') {
+                    ctx.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size);
+                } else if (piece.shape === 'triangle') {
+                    ctx.beginPath();
+                    ctx.moveTo(-piece.size / 2, piece.size / 2);
+                    ctx.lineTo(piece.size / 2, piece.size / 2);
+                    ctx.lineTo(0, -piece.size / 2);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+
+                ctx.restore();
+
+                if (piece.y < -20 || piece.opacity <= 0) {
+                    confetti.splice(i, 1);
+                }
+            }
+            
+            ctx.restore();
         }
 
         function createFirework() {
@@ -303,7 +440,6 @@
             }
         }
 
-        // Countdown timer
         function updateTimer() {
             const now = new Date().getTime();
             const difference = targetDate - now;
@@ -315,19 +451,59 @@
 
             if (window.innerWidth <= 480) {
                 countdown.innerHTML = `
-                    <div>${days}d</div>
-                    <div>${hours}h</div>
-                    <div>${minutes}m</div>
-                    <div>${seconds}s</div>
-                `;
+                    <div class="time-unit">
+                        <span class="time-value">${days}</span>
+                        <span class="time-label">Days</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value">${hours}</span>
+                        <span class="time-label">Hours</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value">${minutes}</span>
+                        <span class="time-label">Minutes</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value">${seconds}</span>
+                        <span class="time-label">Seconds</span>
+                    </div>`;
             } else {
-                countdown.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                countdown.innerHTML = `
+                    <div class="time-unit">
+                        <span class="time-value">${days}</span>
+                        <span class="time-label">Days</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value">${hours}</span>
+                        <span class="time-label">Hours</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value">${minutes}</span>
+                        <span class="time-label">Minutes</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value">${seconds}</span>
+                        <span class="time-label">Seconds</span>
+                    </div>`;
             }
 
             if (difference <= 0) {
                 countdown.style.display = 'none';
                 celebrationImage.style.display = 'block';
                 verse.style.display = 'block';
+                heading.textContent = 'Welcome to 2025!';
+                document.body.style.background = 'white';
+                document.body.style.color = 'black';
+                setTimeout(() => {
+                    welcomePopup.style.display = 'block';
+                    setTimeout(() => {
+                        welcomePopup.classList.add('fade-out');
+                        setTimeout(() => {
+                            welcomePopup.style.display = 'none';
+                            welcomePopup.classList.remove('fade-out');
+                        }, 500);
+                    }, 14500);
+                }, 5000);
                 setTimeout(() => {
                     verse2.style.display = 'block';
                 }, 2000);
