@@ -16,18 +16,19 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            overflow: hidden;
+            overflow-y: auto;
         }
 
         .container {
             padding: 2rem;
             width: 90%;
-            max-width: 600px;
+            max-width: 1000px; /* Increased max-width */
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             position: relative;
             z-index: 1;
+            margin: 2rem 0;
         }
 
         h1 {
@@ -45,15 +46,48 @@
             word-wrap: break-word;
         }
 
-        #verse {
+        .content-wrapper {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .image-container {
+            flex: 1;
+            min-width: 300px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .verses-container {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        #verse, #verse2, #verse3 {
             display: none;
-            font-size: clamp(1.2rem, 4vw, 1.8rem);
-            line-height: 1.6;
-            margin: 2rem 0;
-            padding: 1rem;
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            line-height: 1.4;
+            margin: 1rem 0;
+            padding: 0.8rem;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             animation: fadeIn 2s ease-in;
+            text-align: left;
+        }
+
+        #celebration-image {
+            display: none;
+            width: 100%;
+            height: auto;
+            margin: 0;
+            border-radius: 15px;
+            animation: fadeIn 2s ease-in;
+            max-height: 60%; /* Changed from 80% to 60% */
+            object-fit: contain;
         }
 
         @keyframes fadeIn {
@@ -112,6 +146,19 @@
             .container {
                 padding: 1rem;
             }
+
+            .content-wrapper {
+                flex-direction: column;
+            }
+
+            .image-container, .verses-container {
+                width: 100%;
+                min-width: 100%; /* Added to ensure full width on mobile */
+            }
+
+            #celebration-image {
+                max-height: 200px; /* Adjusted from 250px to 200px for mobile */
+            }
         }
     </style>
     <link rel="shortcut icon" href="img/tree.png" type="">
@@ -119,11 +166,26 @@
 <body>
     <canvas id="canvas"></canvas>
     <div class="container">
-        <h1>Counting down to 2025!</h1>
+        <h1>Welcome to 2025!</h1>
         <div id="timer">Loading...</div>
-        <div id="verse">
-            Jeremiah 29:11<br><br>
-            "For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you, plans to give you hope and a future."
+        <div class="content-wrapper">
+            <div class="image-container">
+                <img id="celebration-image" src="img/Unleashed 2.jpg" alt="Happy 2025!">
+            </div>
+            <div class="verses-container">
+                <div id="verse">
+                    Ephesians 4:1<br><br>
+                    "Therefore, I, the prisoner of the Lord, implore you to walk in a manner worthy of the calling to which you have been called, with all humility and gentleness, with patience, bearing with one another in love, eager to maintain the unity of the Spirit in the bond of peace."
+                </div>
+                <div id="verse2">
+                    Galatians 1:24<br><br>
+                    "And they were glorifying God because of me."
+                </div>
+                <div id="verse3">
+                    1 Thessalonians 4:7<br><br>
+                    "For God has not called us for impurity, but in holiness."
+                </div>
+            </div>
         </div>
         <a href="index.html" class="btn">Back to Home</a>
     </div>
@@ -131,7 +193,10 @@
     <script>
         const countdown = document.getElementById('timer');
         const verse = document.getElementById('verse');
-        const targetDate = new Date('2025-01-01T00:00:00').getTime();
+        const verse2 = document.getElementById('verse2');
+        const verse3 = document.getElementById('verse3');
+        const celebrationImage = document.getElementById('celebration-image');
+        const targetDate = new Date('January 1, 2025 00:00:00').getTime();
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
 
@@ -261,7 +326,14 @@
 
             if (difference <= 0) {
                 countdown.style.display = 'none';
+                celebrationImage.style.display = 'block';
                 verse.style.display = 'block';
+                setTimeout(() => {
+                    verse2.style.display = 'block';
+                }, 2000);
+                setTimeout(() => {
+                    verse3.style.display = 'block';
+                }, 4000);
                 canvas.style.display = 'block';
                 if (!canvas.hasStarted) {
                     canvas.hasStarted = true;
